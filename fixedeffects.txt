@@ -1,0 +1,43 @@
+
+Call:
+lm(formula = per_ticket ~ show_day_of_week + country + days_purchased_before_show + 
+    days_since_start + shows, data = all)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1766.9  -294.3  -102.0   176.7 21800.4 
+
+Coefficients:
+                             Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                -4.205e+02  1.295e+01  -32.474  < 2e-16 ***
+show_day_of_weekMonday     -6.953e+01  7.056e+00   -9.854  < 2e-16 ***
+show_day_of_weekSaturday    5.081e+01  2.331e+00   21.797  < 2e-16 ***
+show_day_of_weekSunday      1.625e+01  2.860e+00    5.682 1.34e-08 ***
+show_day_of_weekThursday   -5.121e+01  3.700e+00  -13.842  < 2e-16 ***
+show_day_of_weekTuesday    -5.824e+01  5.585e+00  -10.427  < 2e-16 ***
+show_day_of_weekWednesday  -6.898e+01  5.941e+00  -11.611  < 2e-16 ***
+countryBrazil               2.302e+01  2.693e+01    0.855   0.3927    
+countryCanada               7.300e+02  1.305e+01   55.937  < 2e-16 ***
+countryFrance              -1.363e+02  1.359e+01  -10.029  < 2e-16 ***
+countryGermany             -2.621e+02  1.328e+01  -19.735  < 2e-16 ***
+countryItaly               -1.279e+02  1.514e+01   -8.447  < 2e-16 ***
+countryMexico               8.420e+02  1.878e+01   44.840  < 2e-16 ***
+countryNetherlands         -1.078e+02  1.378e+01   -7.823 5.19e-15 ***
+countryPoland              -2.870e+02  1.518e+01  -18.908  < 2e-16 ***
+countryPortugal            -1.353e+02  1.549e+01   -8.735  < 2e-16 ***
+countrySingapore           -5.774e+00  1.326e+01   -0.435   0.6634    
+countrySpain               -2.012e+02  1.484e+01  -13.556  < 2e-16 ***
+countrySweden              -2.630e+02  1.454e+01  -18.085  < 2e-16 ***
+countrySwitzerland          3.663e+01  1.768e+01    2.072   0.0382 *  
+countryUnited Kingdom      -1.043e+02  1.290e+01   -8.087 6.15e-16 ***
+countryUnited States        1.081e+03  1.261e+01   85.718  < 2e-16 ***
+days_purchased_before_show -2.084e+00  1.181e-02 -176.459  < 2e-16 ***
+days_since_start            2.216e+00  9.932e-03  223.106  < 2e-16 ***
+shows                       7.807e+00  7.753e-01   10.070  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 504 on 294670 degrees of freedom
+Multiple R-squared:  0.3271,	Adjusted R-squared:  0.327 
+F-statistic:  5968 on 24 and 294670 DF,  p-value: < 2.2e-16
+

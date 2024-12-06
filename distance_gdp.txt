@@ -1,0 +1,146 @@
+
+Call:
+lm(formula = log_ticket_price ~ show_day_of_week + gdp + dist + 
+    days_purchased_before_show + days_since_start + resale, data = all)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.1263 -0.4359  0.0268  0.4516  4.0351 
+
+Coefficients:
+                             Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                 5.214e+00  5.939e-03  877.850   <2e-16 ***
+show_day_of_weekMonday     -6.250e-03  9.322e-03   -0.670   0.5026    
+show_day_of_weekSaturday    7.659e-02  3.149e-03   24.325   <2e-16 ***
+show_day_of_weekSunday      3.649e-02  3.812e-03    9.572   <2e-16 ***
+show_day_of_weekThursday   -1.004e-02  4.770e-03   -2.104   0.0353 *  
+show_day_of_weekTuesday    -9.530e-02  7.106e-03  -13.411   <2e-16 ***
+show_day_of_weekWednesday  -1.506e-01  6.845e-03  -22.003   <2e-16 ***
+gdp                         7.094e-06  4.906e-08  144.579   <2e-16 ***
+dist                       -1.199e-04  4.678e-07 -256.356   <2e-16 ***
+days_purchased_before_show -1.790e-03  1.539e-05 -116.343   <2e-16 ***
+days_since_start            2.128e-03  8.300e-06  256.441   <2e-16 ***
+resale                      5.995e-01  4.309e-03  139.148   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.6819 on 294683 degrees of freedom
+Multiple R-squared:  0.3419,	Adjusted R-squared:  0.3418 
+F-statistic: 1.392e+04 on 11 and 294683 DF,  p-value: < 2.2e-16
+
+
+Call:
+lm(formula = log_ticket_price ~ show_day_of_week + log(gdp) + 
+    dist + days_purchased_before_show + days_since_start, data = all)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.5302 -0.4299  0.0282  0.4539  3.9684 
+
+Coefficients:
+                             Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                -3.937e+00  5.044e-02  -78.048   <2e-16 ***
+show_day_of_weekMonday      1.734e-01  9.348e-03   18.548   <2e-16 ***
+show_day_of_weekSaturday    6.699e-02  3.202e-03   20.923   <2e-16 ***
+show_day_of_weekSunday     -2.029e-03  3.879e-03   -0.523    0.601    
+show_day_of_weekThursday   -1.780e-03  4.852e-03   -0.367    0.714    
+show_day_of_weekTuesday    -9.782e-02  7.220e-03  -13.548   <2e-16 ***
+show_day_of_weekWednesday  -3.558e-01  6.798e-03  -52.335   <2e-16 ***
+log(gdp)                    9.179e-01  4.464e-03  205.612   <2e-16 ***
+dist                       -1.429e-04  4.466e-07 -320.080   <2e-16 ***
+days_purchased_before_show -1.579e-03  1.550e-05 -101.915   <2e-16 ***
+days_since_start            2.229e-03  8.823e-06  252.622   <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.6932 on 294684 degrees of freedom
+Multiple R-squared:  0.3197,	Adjusted R-squared:  0.3197 
+F-statistic: 1.385e+04 on 10 and 294684 DF,  p-value: < 2.2e-16
+
+
+Call:
+lm(formula = log_ticket_price ~ show_day_of_week + gdp + log(dist) + 
+    days_purchased_before_show + days_since_start, data = all)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.1234 -0.4909  0.0383  0.5388  3.8440 
+
+Coefficients:
+                             Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                 6.771e+00  8.574e-03  789.732  < 2e-16 ***
+show_day_of_weekMonday     -1.221e-01  1.037e-02  -11.772  < 2e-16 ***
+show_day_of_weekSaturday    4.048e-02  3.583e-03   11.299  < 2e-16 ***
+show_day_of_weekSunday     -3.110e-02  4.346e-03   -7.154 8.42e-13 ***
+show_day_of_weekThursday   -4.709e-02  5.433e-03   -8.667  < 2e-16 ***
+show_day_of_weekTuesday    -1.085e-01  8.104e-03  -13.393  < 2e-16 ***
+show_day_of_weekWednesday  -4.251e-01  7.627e-03  -55.737  < 2e-16 ***
+gdp                         6.674e-06  5.332e-08  125.158  < 2e-16 ***
+log(dist)                  -1.728e-01  1.044e-03 -165.517  < 2e-16 ***
+days_purchased_before_show  2.728e-06  1.611e-05    0.169    0.866    
+days_since_start            1.096e-03  8.629e-06  127.048  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.7766 on 294684 degrees of freedom
+Multiple R-squared:  0.1463,	Adjusted R-squared:  0.1463 
+F-statistic:  5050 on 10 and 294684 DF,  p-value: < 2.2e-16
+
+
+Call:
+lm(formula = log_ticket_price ~ show_day_of_week + gdp + dist + 
+    quad_days_before_show + days_since_start, data = all)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.0095 -0.4411  0.0251  0.4674  3.9320 
+
+Coefficients:
+                            Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                5.639e+00  5.030e-03 1121.105  < 2e-16 ***
+show_day_of_weekMonday     2.237e-01  9.528e-03   23.480  < 2e-16 ***
+show_day_of_weekSaturday   7.435e-02  3.265e-03   22.773  < 2e-16 ***
+show_day_of_weekSunday     3.022e-02  3.951e-03    7.648 2.04e-14 ***
+show_day_of_weekThursday  -1.025e-02  4.946e-03   -2.073   0.0382 *  
+show_day_of_weekTuesday   -7.739e-02  7.368e-03  -10.503  < 2e-16 ***
+show_day_of_weekWednesday -3.600e-01  6.938e-03  -51.885  < 2e-16 ***
+gdp                        8.571e-06  4.908e-08  174.635  < 2e-16 ***
+dist                      -1.383e-04  4.537e-07 -304.779  < 2e-16 ***
+quad_days_before_show     -3.386e-06  4.565e-08  -74.170  < 2e-16 ***
+days_since_start           1.899e-03  8.659e-06  219.304  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.707 on 294684 degrees of freedom
+Multiple R-squared:  0.2924,	Adjusted R-squared:  0.2924 
+F-statistic: 1.218e+04 on 10 and 294684 DF,  p-value: < 2.2e-16
+
+
+Call:
+lm(formula = log_ticket_price ~ show_day_of_week + gdp + dist + 
+    days_purchased_before_show + quad_days_since_start, data = all)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.9373 -0.4345  0.0266  0.4620  4.0850 
+
+Coefficients:
+                             Estimate Std. Error  t value Pr(>|t|)    
+(Intercept)                 5.756e+00  4.879e-03 1179.701  < 2e-16 ***
+show_day_of_weekMonday      2.145e-01  9.477e-03   22.637  < 2e-16 ***
+show_day_of_weekSaturday    7.466e-02  3.246e-03   22.999  < 2e-16 ***
+show_day_of_weekSunday      2.204e-02  3.931e-03    5.608 2.04e-08 ***
+show_day_of_weekThursday   -5.821e-03  4.914e-03   -1.185  0.23619    
+show_day_of_weekTuesday    -2.242e-02  7.318e-03   -3.064  0.00219 ** 
+show_day_of_weekWednesday  -2.970e-01  6.893e-03  -43.078  < 2e-16 ***
+gdp                         9.215e-06  4.980e-08  185.041  < 2e-16 ***
+dist                       -1.252e-04  4.173e-07 -300.097  < 2e-16 ***
+days_purchased_before_show -1.486e-03  1.574e-05  -94.376  < 2e-16 ***
+quad_days_since_start       3.003e-06  1.301e-08  230.877  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.7031 on 294684 degrees of freedom
+Multiple R-squared:  0.3003,	Adjusted R-squared:  0.3003 
+F-statistic: 1.265e+04 on 10 and 294684 DF,  p-value: < 2.2e-16
+
