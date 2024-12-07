@@ -1,0 +1,732 @@
+---
+title: "Eras Tour Data Cleaning"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+library(ggmap)
+library(geosphere)
+
+ggmap::register_google("AIzaSyDI2wNlvCbCN6D4dz4hN4-pixNNXUPdf-E")
+```
+
+``` {r}
+glendale_1 <- read_csv("01 Glendale/2023.03.17.csv")
+glendale_1$date <- "03-17-2023"
+glendale_2 <- read_csv("01 Glendale/2023.03.18.csv")
+glendale_2$date <- "03-18-2023"
+
+glendale <- rbind(glendale_1, glendale_2)
+glendale$loc <- "Glendale"
+glendale$state <- "AZ"
+glendale$gdp <- 63906
+glendale$shows <- 2
+
+vegas_1 <- read_csv("02 Las Vegas/2023.03.24.csv")
+vegas_1$date <- "03-24-2023"
+vegas_2 <- read_csv("02 Las Vegas/2023.03.25.csv")
+vegas_2$date <- "03-25-2023"
+las_vegas <- rbind(vegas_1, vegas_2)
+las_vegas$loc <- "Las Vegas"
+las_vegas$state <- "NV"
+las_vegas$gdp <- 59411
+las_vegas$shows <- 2
+
+arlington_1 <- read_csv("03 Arlington/2023.03.31.csv")
+arlington_1$date <- "03-31-2023"
+arlington_2 <- read_csv("03 Arlington/2023.04.01.csv")
+arlington_2$date <- "04-01-2023"
+arlington_3 <- read_csv("03 Arlington/2023.04.02.csv")
+arlington_3$date <- "04-02-2023"
+arlington <- rbind(arlington_1, arlington_2, arlington_3)
+arlington$loc <- "Arlington"
+arlington$state <- "TX"
+arlington$gdp <- 77109
+arlington$shows <- 3
+
+tampa_1 <- read_csv("04 Tampa/2023.04.13.csv")
+tampa_1$date <- "04-13-2023"
+tampa_2 <- read_csv("04 Tampa/2023.04.14.csv")
+tampa_2$date <- "04-14-2023"
+tampa_3 <- read_csv("04 Tampa/2023.04.15.csv")
+tampa_3$date <- "04-15-2023"
+tampa <- rbind(tampa_1, tampa_2, tampa_3)
+tampa$loc <- "Tampa"
+tampa$state <- "FL"
+tampa$gdp <- 59235
+tampa$shows <- 3
+
+houston_1 <- read_csv("05 Houston/2023.04.21.csv")
+houston_1$date <- "04-21-2023"
+houston_2 <- read_csv("05 Houston/2023.04.22.csv")
+houston_2$date <- "04-22-2023"
+houston_3 <- read_csv("05 Houston/2023.04.23.csv")
+houston_3$date <- "04-23-2023"
+houston <- rbind(houston_1, houston_2, houston_3)
+houston$loc <- "Houston"
+houston$state <- "TX"
+houston$gdp <- 74522
+houston$shows <- 3
+
+atlanta_1 <- read_csv("06 Atlanta/2023.04.28.csv") 
+atlanta_1$date <- "04-28-2023"
+atlanta_2 <- read_csv("06 Atlanta/2023.04.29.csv")
+atlanta_2$date <- "04-29-2023"
+atlanta_3 <- read_csv("06 Atlanta/2023.04.30.csv")
+atlanta_3$date <- "04-30-2023"
+atlanta <- rbind(atlanta_1, atlanta_2, atlanta_3)
+atlanta$loc <- "Atlanta"
+atlanta$state <- "GA"
+atlanta$gdp <- 77119
+atlanta$shows <- 3
+
+nashville_1 <- read_csv("07 Nashville/2023.05.05.csv")
+nashville_1$date <- "05-05-2023"
+nashville_2 <- read_csv("07 Nashville/2023.05.06.csv")
+nashville_2$date <- "05-06-2023"
+nashville_3 <- read_csv("07 Nashville/2023.05.07.csv")
+nashville_3$date <- "05-07-2023"
+nashville <- rbind(nashville_1, nashville_2, nashville_3)
+nashville$loc <- "Nashville"
+nashville$state <- "TN"
+nashville$gdp <- 81010
+nashville$shows <- 3
+
+philly_1 <- read_csv("08 Philadelphia/2023.05.12.csv")
+philly_1$date <- "05-12-2023"
+philly_2 <- read_csv("08 Philadelphia/2023.05.13.csv")
+philly_2$date <- "05-13-2023"
+philly_3 <- read_csv("08 Philadelphia/2023.05.14.csv")
+philly_3$date <- "05-14-2023"
+philly <- rbind(philly_1, philly_2, philly_3)
+philly$loc <- "Philadelphia"
+philly$state <- "PA"
+philly$gdp <- 76675
+philly$shows <- 3
+
+boston_1 <- read_csv("09 Foxborough/2023.05.19.csv")
+boston_1$date <- "05-19-2023"
+boston_2 <- read_csv("09 Foxborough/2023.05.20.csv")
+boston_2$date <- "05-20-2023"
+boston_3 <- read_csv("09 Foxborough/2023.05.21.csv")
+boston_3$date <- "05-21-2023"
+boston <- rbind(boston_1, boston_2, boston_3)
+boston$loc <- "Foxborough"
+boston$state <- "MA"
+boston$gdp <- 108506
+boston$shows <- 3
+
+nyc_1 <- read_csv("10 East Rutherford/2023.05.26.csv")
+nyc_1$date <- "05-26-2023"
+nyc_2 <- read_csv("10 East Rutherford/2023.05.27.csv")
+nyc_2$date <- "05-27-2023"
+nyc_3 <- read_csv("10 East Rutherford/2023.05.28.csv")
+nyc_3$date <- "05-28-2023"
+nyc <- rbind(nyc_1, nyc_2, nyc_3)
+nyc$loc <- "East Rutherford"
+nyc$state <- "NJ"
+nyc$gdp <- 100806
+nyc$shows <- 3
+
+chicago_1 <- read_csv("11 Chicago/2023.06.02.csv")
+chicago_1$date <- "06-02-2023"
+chicago_2 <- read_csv("11 Chicago/2023.06.03.csv")
+chicago_2$date <- "06-03-2023"
+chicago_3 <- read_csv("11 Chicago/2023.06.04.csv")
+chicago_3$date <- "06-04-2023"
+chicago <- rbind(chicago_1, chicago_2, chicago_3)
+chicago$loc <- "Chicago"
+chicago$state <- "IL"
+chicago$gdp <- 80398
+chicago$shows <- 3
+
+detroit_1 <- read_csv("12 Detroit/2023.06.09.csv")
+detroit_1$date <- "06-09-2023"
+detroit_2 <- read_csv("12 Detroit/2023.06.10.csv")
+detroit_2$date <- "06-10-2023"
+detroit <- rbind(detroit_1, detroit_2)
+detroit$loc <- "Detroit"
+detroit$state <- "MI"
+detroit$gdp <- 64982
+detroit$shows <- 2
+
+pittsburgh_1 <- read_csv("13 Pittsburgh/2023.06.16.csv")
+pittsburgh_1$date <- "06-16-2023"
+pittsburgh_2 <- read_csv("13 Pittsburgh/2023.06.17.csv")
+pittsburgh_2$date <- "06-17-2023"
+pittsburgh <- rbind(pittsburgh_1, pittsburgh_2)
+pittsburgh$loc <- "Pittsburgh"
+pittsburgh$state <- "PA"
+pittsburgh$gdp <- 71391
+pittsburgh$shows <- 2
+
+minneapolis_1 <- read_csv("14 Minneapolis/2023.06.23.csv")
+minneapolis_1$date <- "06-23-2023"
+minneapolis_2 <- read_csv("14 Minneapolis/2023.06.24.csv")
+minneapolis_2$date <- "06-24-2023"
+minneapolis <- rbind(minneapolis_1, minneapolis_2)
+minneapolis$loc <- "Minneapolis"
+minneapolis$state <- "MN"
+minneapolis$gdp <- 80468
+minneapolis$shows <- 2
+
+cincinnati_1 <- read_csv("15 Cincinnati/2023.06.30.csv")
+cincinnati_1$date <- "06-30-2023"
+cincinnati_2 <- read_csv("15 Cincinnati/2023.07.01.csv")
+cincinnati_2$date <- "07-01-2023"
+cincinnati <- rbind(cincinnati_1, cincinnati_2)
+cincinnati$loc <- "Cincinnati"
+cincinnati$state <- "OH"
+cincinnati$gdp <- 75992
+cincinnati$shows <- 2
+
+kansas_1 <- read_csv("16 Kansas City/2023.07.07.csv")
+kansas_1$date <- "07-07-2023"
+kansas_2 <- read_csv("16 Kansas City/2023.07.08.csv")
+kansas_2$date <- "07-08-2023"
+kansas_city <- rbind(kansas_1, kansas_2)
+kansas_city$loc <- "Kansas City"
+kansas_city$state <- "MO"
+kansas_city$gdp <- 70165
+kansas_city$shows <- 2
+
+denver_1 <- read_csv("17 Denver/2023.07.14.csv")
+denver_1$date <- "07-14-2023"
+denver_2 <- read_csv("17 Denver/2023.07.15.csv")
+denver_2$date <- "07-15-2023"
+denver <- rbind(denver_1, denver_2)
+denver$loc <- "Denver"
+denver$state <- "CO"
+denver$gdp <- 85246
+denver$shows <- 2
+
+seattle_1 <- read_csv("18 Seattle/2023.07.22.csv")
+seattle_1$date <- "07-22-2023"
+seattle_2 <- read_csv("18 Seattle/2023.07.23.csv")
+seattle_2$date <- "07-23-2023"
+seattle <- rbind(seattle_1, seattle_2)
+seattle$loc <- "Seattle"
+seattle$state <- "WA"
+seattle$gdp <- 119646
+seattle$shows <- 2
+
+santa_clara_1 <- read_csv("19 Santa Clara/2023.07.28.csv")
+santa_clara_1$date <- "07-28-2023"
+santa_clara_2 <- read_csv("19 Santa Clara/2023.07.29.csv")
+santa_clara_2$date <- "07-29-2023"
+santa_clara <- rbind(santa_clara_1, santa_clara_2)
+santa_clara$loc <- "Santa Clara"
+santa_clara$state <- "CA"
+santa_clara$gdp <- 210235
+santa_clara$shows <- 2
+
+la_1 <- read_csv("20 Inglewood/2023.08.03.csv")
+la_1$date <- "08-03-2023"
+la_2 <- read_csv("20 Inglewood/2023.08.04.csv")
+la_2$date <- "08-04-2023"
+la_3 <- read_csv("20 Inglewood/2023.08.05.csv")
+la_3$date <- "08-05-2023"
+la_4 <- read_csv("20 Inglewood/2023.08.07.csv")
+la_4$date <- "08-07-2023"
+la_5 <- read_csv("20 Inglewood/2023.08.08.csv")
+la_5$date <- "08-08-2023"
+la_6 <- read_csv("20 Inglewood/2023.08.09.csv")
+la_6$date <- "08-09-2023"
+la <- rbind(la_1, la_2, la_3, la_4, la_5, la_6)
+la$loc <- "Inglewood"
+la$state <- "CA"
+la$gdp <- 86532
+la$shows <- 6
+
+miami_1 <- read_csv("42 Miami/2024.10.18.csv")
+miami_1$date <- "10-18-2024"
+miami_2 <- read_csv("42 Miami/2024.10.19.csv")
+miami_2$date <- "10-19-2024"
+miami_3 <- read_csv("42 Miami/2024.10.20.csv")
+miami_3$date <- "10-20-2024"
+miami <- rbind(miami_1, miami_2, miami_3)
+miami$loc <- "Miami"
+miami$state <- "FL"
+miami$gdp <- 68477
+miami$shows <- 3
+
+indianapolis_1 <- read_csv("43 Indianapolis/2024.11.01.csv")
+indianapolis_1$date <- "11-01-2024"
+indianapolis_2 <- read_csv("43 Indianapolis/2024.11.02.csv")
+indianapolis_2$date <- "11-02-2024"
+indianapolis_3 <- read_csv("43 Indianapolis/2024.11.03.csv")
+indianapolis_3$date <- "11-03-2024"
+indianapolis <- rbind(indianapolis_1, indianapolis_2, indianapolis_3)
+indianapolis$loc <- "Indianapolis"
+indianapolis$state <- "IN"
+indianapolis$gdp <- 76200
+indianapolis$shows <- 3
+
+us <- rbind(glendale, las_vegas, arlington, tampa, houston, atlanta, nashville, philly, boston, nyc, chicago, detroit, pittsburgh, minneapolis, cincinnati, kansas_city, denver, seattle, santa_clara, la, miami, indianapolis) %>% filter(Qty > 0)
+us$country <- "United States"
+us$resale <- 1
+
+us$per_ticket <- us$Price / us$Qty
+us$date <- mdy(us$date)
+```
+
+``` {r}
+mexico_1 <- read_csv("21 Mexico City/2023.08.24.csv")
+mexico_1$date <- "08-24-2023"
+mexico_2 <- read_csv("21 Mexico City/2023.08.25.csv")
+mexico_2$date <- "08-25-2023"
+mexico_3 <- read_csv("21 Mexico City/2023.08.27.csv")
+mexico_3$date <- "08-27-2023"
+mexico_city <- rbind(mexico_1, mexico_2, mexico_3)
+mexico_city$loc <- "Mexico City"
+mexico_city$state <- NA
+mexico_city$country <- "Mexico"
+mexico_city$resale <- 1
+mexico_city$shows <- 4
+
+rio_1 <- read_csv("22 Rio de Janeiro/2023.11.17.csv")
+rio_1$date <- "11-17-2023"
+rio_2 <- read_csv("22 Rio de Janeiro/2023.11.19.csv")
+rio_2$date <- "11-19-2023"
+rio_3 <- read_csv("22 Rio de Janeiro/2023.11.20.csv")
+rio_3$date <- "11-20-2023"
+rio <- rbind(rio_1, rio_2, rio_3)
+rio$loc <- "Rio de Janeiro"
+rio$state <- NA
+rio$country <- "Brazil"
+rio$resale <- 1
+rio$shows <- 3
+
+sao_paolo_1 <- read_csv("23 Sao Paolo/2023.11.24.csv")
+sao_paolo_1$date <- "11-24-2023"
+sao_paolo_2 <- read_csv("23 Sao Paolo/2023.11.25.csv")
+sao_paolo_2$date <- "11-25-2023"
+sao_paolo_3 <- read_csv("23 Sao Paolo/2023.11.26.csv")
+sao_paolo_3$date <- "11-26-2023"
+sao_paolo <- rbind(sao_paolo_1, sao_paolo_2, sao_paolo_3)
+sao_paolo$loc <- "Sao Paolo"
+sao_paolo$state <- NA
+sao_paolo$country <- "Brazil"
+sao_paolo$resale <- 1
+sao_paolo$shows <- 3
+
+melbourne_1 <- read_csv("24 Melbourne/2024.02.16.csv")
+melbourne_1$date <- "02-16-2024"
+melbourne_2 <- read_csv("24 Melbourne/2024.02.17.csv")
+melbourne_2$date <- "02-17-2024"
+melbourne_3 <- read_csv("24 Melbourne/2024.02.18.csv")
+melbourne_3$date <- "02-18-2024"
+melbourne <- rbind(melbourne_1, melbourne_2, melbourne_3)
+melbourne$loc <- "Melbourne"
+melbourne$state <- NA
+melbourne$country <- "Australia"
+melbourne$resale <- 0
+melbourne$shows <- 3
+
+sydney_1 <- read_csv("25 Sydney/2024.02.23.csv")
+sydney_1$date <- "02-23-2024"
+sydney_2 <- read_csv("25 Sydney/2024.02.24.csv")
+sydney_2$date <- "02-24-2024"
+sydney_3 <- read_csv("25 Sydney/2024.02.25.csv")
+sydney_3$date <- "02-25-2024"
+sydney_4 <- read_csv("25 Sydney/2024.02.26.csv")
+sydney_4$date <- "02-26-2024"
+sydney <- rbind(sydney_1, sydney_2, sydney_3, sydney_4)
+sydney$loc <- "Sydney"
+sydney$state <- NA
+sydney$country <- "Australia"
+sydney$resale <- 0
+sydney$shows <- 4
+
+singapore_1 <- read_csv("26 Singapore/2024.03.02.csv")
+singapore_1$date <- "03-02-2024"
+singapore_2 <- read_csv("26 Singapore/2024.03.03.csv")
+singapore_2$date <- "03-03-2024"
+singapore_3 <- read_csv("26 Singapore/2024.03.04.csv")
+singapore_3$date <- "03-04-2024"
+singapore_4 <- read_csv("26 Singapore/2024.03.07.csv")
+singapore_4$date <- "03-07-2024"
+singapore_5 <- read_csv("26 Singapore/2024.03.08.csv")
+singapore_5$date <- "03-08-2024"
+singapore_6 <- read_csv("26 Singapore/2024.03.09.csv")
+singapore_6$date <- "03-09-2024"
+singapore <- rbind(singapore_1, singapore_2, singapore_3, singapore_4, singapore_5, singapore_6)
+singapore$loc <- "Singapore"
+singapore$state <- NA
+singapore$country <- "Singapore"
+singapore$resale <- 1
+singapore$shows <- 6
+
+paris_1 <- read_csv("27 Nanterre/2024.05.09.csv")
+paris_1$date <- "05-09-2024"
+paris_2 <- read_csv("27 Nanterre/2024.05.10.csv")
+paris_2$date <- "05-10-2024"
+paris_3 <- read_csv("27 Nanterre/2024.05.11.csv")
+paris_3$date <- "05-11-2024"
+paris_4 <- read_csv("27 Nanterre/2024.05.12.csv")
+paris_4$date <- "05-12-2024"
+paris <- rbind(paris_1, paris_2, paris_3, paris_4)
+paris$loc <- "Paris"
+paris$state <- NA
+paris$country <- "France"
+paris$resale <- 0
+paris$shows <- 4
+
+stockholm_1 <- read_csv("28 Stockholm/2024.05.17.csv")
+stockholm_1$date <- "05-17-2024"
+stockholm_2 <- read_csv("28 Stockholm/2024.05.18.csv")
+stockholm_2$date <- "05-18-2024"
+stockholm_3 <- read_csv("28 Stockholm/2024.05.19.csv")
+stockholm_3$date <- "05-19-2024"
+stockholm <- rbind(stockholm_1, stockholm_2, stockholm_3)
+stockholm$loc <- "Stockholm"
+stockholm$state <- NA
+stockholm$country <- "Sweden"
+stockholm$resale <- 0
+stockholm$shows <- 3
+
+lisbon_1 <- read_csv("29 Lisbon/2024.05.24.csv")
+lisbon_1$date <- "05-24-2024"
+lisbon_2 <- read_csv("29 Lisbon/2024.05.25.csv")
+lisbon_2$date <- "05-25-2024"
+lisbon <- rbind(lisbon_1, lisbon_2)
+lisbon$loc <- "Lisbon"
+lisbon$state <- NA
+lisbon$country <- "Portugal"
+lisbon$resale <- 0
+lisbon$shows <- 2
+
+madrid_1 <- read_csv("30 Madrid/2024.05.29.csv")
+madrid_1$date <- "05-29-2024"
+madrid_2 <- read_csv("30 Madrid/2024.05.30.csv")
+madrid_2$date <- "05-30-2024"
+madrid <- rbind(madrid_1, madrid_2)
+madrid$loc <- "Madrid"
+madrid$state <- NA
+madrid$country <- "Spain"
+madrid$resale <- 0
+madrid$shows <- 2
+
+edinburgh_1 <- read_csv("31 Edinburgh/2024.06.07.csv")
+edinburgh_1$date <- "06-07-2024"
+edinburgh_2 <- read_csv("31 Edinburgh/2024.06.08.csv")
+edinburgh_2$date <- "06-08-2024"
+edinburgh_3 <- read_csv("31 Edinburgh/2024.06.09.csv")
+edinburgh_3$date <- "06-09-2024"
+edinburgh <- rbind(edinburgh_1, edinburgh_2, edinburgh_3)
+edinburgh$loc <- "Edinburgh"
+edinburgh$state <- NA
+edinburgh$country <- "United Kingdom"
+edinburgh$resale <- 1
+edinburgh$shows <- 3
+
+liverpool_1 <- read_csv("32 Liverpool/2024.06.13.csv")
+liverpool_1$date <- "06-13-2024"
+liverpool_2 <- read_csv("32 Liverpool/2024.06.14.csv")
+liverpool_2$date <- "06-14-2024"
+liverpool_3 <- read_csv("32 Liverpool/2024.06.15.csv")
+liverpool_3$date <- "06-15-2024"
+liverpool <- rbind(liverpool_1, liverpool_2, liverpool_3)
+liverpool$loc <- "Liverpool"
+liverpool$state <- NA
+liverpool$country <- "United Kingdom"
+liverpool$resale <- 1
+liverpool$shows <- 3
+
+cardiff <- rbind(read_csv("33 Cardiff/2024.06.18.csv"))
+cardiff$date <- "06-18-2024"
+cardiff$loc <- "Cardiff"
+cardiff$state <- NA
+cardiff$country <- "United Kingdom"
+cardiff$resale <- 1
+cardiff$shows <- 1
+
+london_1 <- read_csv("34 London/2024.06.21.csv")
+london_1$date <- "06-21-2024"
+london_2 <- read_csv("34 London/2024.06.22.csv")
+london_2$date <- "06-22-2024"
+london_3 <- read_csv("34 London/2024.06.23.csv")
+london_3$date <- "06-23-2024"
+london_4 <- read_csv("34 London/2024.08.15.csv")
+london_4$date <- "08-15-2024"
+london_5 <- read_csv("34 London/2024.08.16.csv")
+london_5$date <- "08-16-2024"
+london_6 <- read_csv("34 London/2024.08.17.csv")
+london_6$date <- "08-17-2024"
+london_7 <- read_csv("34 London/2024.08.19.csv")
+london_7$date <- "08-19-2024"
+london_8 <- read_csv("34 London/2024.08.20.csv")
+london_8$date <- "08-20-2024"
+london <- rbind(london_1, london_2, london_3, london_4, london_5, london_6, london_7, london_8)
+london$loc <- "London"
+london$state <- NA
+london$country <- "United Kingdom"
+london$resale <- 1
+london$shows <- 8
+
+amsterdam_1 <- read_csv("35 Amsterdam/2024.07.04.csv")
+amsterdam_1$date <- "07-04-2024"
+amsterdam_2 <- read_csv("35 Amsterdam/2024.07.05.csv")
+amsterdam_2$date <- "07-05-2024"
+amsterdam_3 <- read_csv("35 Amsterdam/2024.07.06.csv")
+amsterdam_3$date <- "07-06-2024"
+amsterdam <- rbind(amsterdam_1, amsterdam_2, amsterdam_3)
+amsterdam$loc <- "Amsterdam"
+amsterdam$state <- NA
+amsterdam$country <- "Netherlands"
+amsterdam$resale <- 0
+amsterdam$shows <- 3
+
+zurich_1 <- read_csv("36 Zurich/2024.07.09.csv")
+zurich_1$date <- "07-09-2024"
+zurich_2 <- read_csv("36 Zurich/2024.07.10.csv")
+zurich_2$date <- "07-10-2024"
+zurich <- rbind(zurich_1, zurich_2)
+zurich$loc <- "Zurich"
+zurich$state <- NA
+zurich$country <- "Switzerland"
+zurich$resale <- 0
+zurich$shows <- 2
+
+milan_1 <- read_csv("37 Milan/2024.07.13.csv")
+milan_1$date <- "07-13-2024"
+milan_2 <- read_csv("37 Milan/2024.07.14.csv")
+milan_2$date <- "07-14-2024"
+milan <- rbind(milan_1, milan_2)
+milan$loc <- "Milan"
+milan$state <- NA
+milan$country <- "Italy"
+milan$resale <- 0
+milan$shows <- 2
+
+gelsenkirchen_1 <- read_csv("38 Gelsenkirchen/2024.07.17.csv")
+gelsenkirchen_1$date <- "07-17-2024"
+gelsenkirchen_2 <- read_csv("38 Gelsenkirchen/2024.07.18.csv")
+gelsenkirchen_2$date <- "07-18-2024"
+gelsenkirchen_3 <- read_csv("38 Gelsenkirchen/2024.07.19.csv")
+gelsenkirchen_3$date <- "07-19-2024"
+gelsenkirchen <- rbind(gelsenkirchen_1, gelsenkirchen_2, gelsenkirchen_3)
+gelsenkirchen$loc <- "Gelsenkirchen"
+gelsenkirchen$state <- NA
+gelsenkirchen$country <- "Germany"
+gelsenkirchen$resale <- 0
+gelsenkirchen$shows <- 3
+
+hamburg_1 <- read_csv("39 Hamburg/2024.07.23.csv")
+hamburg_1$date <- "07-23-2024"
+hamburg_2 <- read_csv("39 Hamburg/2024.07.24.csv")
+hamburg_2$date <- "07-24-2024"
+hamburg <- rbind(hamburg_1, hamburg_2)
+hamburg$loc <- "Hamburg"
+hamburg$state <- NA
+hamburg$country <- "Germany"
+hamburg$resale <- 0
+hamburg$shows <- 2
+
+munich_1 <- read_csv("40 Munich/2024.07.27.csv")
+munich_1$date <- "07-27-2024"
+munich_2 <- read_csv("40 Munich/2024.07.28.csv")
+munich_2$date <- "07-28-2024"
+munich <- rbind(munich_1, munich_2)
+munich$loc <- "Munich"
+munich$state <- NA
+munich$country <- "Germany"
+munich$resale <- 0
+munich$shows <- 2
+
+warsaw_1 <- read_csv("41 Warsaw/2024.08.01.csv")
+warsaw_1$date <- "08-01-2024"
+warsaw_2 <- read_csv("41 Warsaw/2024.08.02.csv")
+warsaw_2$date <- "08-02-2024"
+warsaw_3 <- read_csv("41 Warsaw/2024.08.03.csv")
+warsaw_3$date <- "08-03-2024"
+warsaw <- rbind(warsaw_1, warsaw_2, warsaw_3)
+warsaw$loc <- "Warsaw"
+warsaw$state <- NA
+warsaw$country <- "Poland"
+warsaw$resale <- 0
+warsaw$shows <- 3
+
+toronto_1 <- read_csv("44 Toronto/2024.11.14.csv")
+toronto_1$date <- "11-14-2024"
+toronto_2 <- read_csv("44 Toronto/2024.11.15.csv")
+toronto_2$date <- "11-15-2024"
+toronto_3 <- read_csv("44 Toronto/2024.11.16.csv")
+toronto_3$date <- "11-16-2024"
+toronto_4 <- read_csv("44 Toronto/2024.11.21.csv")
+toronto_4$date <- "11-21-2024"
+toronto_5 <- read_csv("44 Toronto/2024.11.22.csv")
+toronto_5$date <- "11-22-2024"
+toronto_6 <- read_csv("44 Toronto/2024.11.23.csv")
+toronto_6$date <- "11-23-2024"
+
+toronto <- rbind(toronto_1, toronto_2, toronto_3, toronto_4, toronto_5, toronto_6)
+toronto$loc <- "Toronto"
+toronto$state <- NA
+toronto$country <- "Canada"
+toronto$resale <- 1
+toronto$shows <- 6
+
+vancouver_1 <- read_csv("45 Vancouver/2024.12.06.csv")
+vancouver_1$date <- "12-06-2024"
+vancouver_2 <- read_csv("45 Vancouver/2024.12.07.csv")
+vancouver_2$date <- "12-07-2024"
+vancouver_3 <- read_csv("45 Vancouver/2024.12.08.csv")
+vancouver_3$date <- "12-08-2024"
+
+vancouver <- rbind(vancouver_1, vancouver_2, vancouver_3)
+vancouver$loc <- "Vancouver"
+vancouver$state <- NA
+vancouver$country <- "Canada"
+vancouver$resale <- 1
+vancouver$shows <- 3
+
+intl <- rbind(mexico_city, rio, sao_paolo, melbourne, sydney, singapore, paris, stockholm, lisbon, madrid, edinburgh, liverpool, cardiff, london, amsterdam, zurich, milan, gelsenkirchen, hamburg, munich, warsaw, toronto, vancouver) %>% filter(Qty > 0)
+
+intl$per_ticket <- intl$Price / intl$Qty
+intl$date <- mdy(intl$date)
+
+gdp_per_capita <- read_csv("gdp-per-capita-worldbank/gdp-per-capita-worldbank.csv") %>% filter(Year == "2022") %>% select(Entity, `GDP per capita, PPP (constant 2017 international $)`)
+
+names(gdp_per_capita)[names(gdp_per_capita) == "GDP per capita, PPP (constant 2017 international $)"] <- "gdp"
+
+intl <- left_join(intl, gdp_per_capita, by = join_by("country" == "Entity"))
+```
+
+``` {r}
+all <- rbind(intl, us)
+all <- all %>% separate_wider_delim(`Date/Time (EDT)`, delim = "/", names = c("Date of Sale", "Time of Sale"))
+
+all$log_ticket_price <- log(all$per_ticket)
+all$sale_date <- mdy(all$`Date of Sale`)
+all$sale_day_of_week <- weekdays(all$sale_date)
+all$show_day_of_week <- weekdays(all$date)
+all$days_purchased_before_show <- all$date - all$sale_date
+all$days_purchased_before_show[all$days_purchased_before_show == -1] <- 0
+# above line is a hack to fix time zone issues
+
+all$days_since_start <- all$date - mdy("03-17-2023")
+```
+
+``` {r}
+sink("fixedeffects.txt")
+print(summary(lm(per_ticket ~ show_day_of_week + country + days_purchased_before_show + days_since_start + shows, data = all)))
+sink()
+```
+
+``` {r}
+all$location[all$country != "United States"] <- paste0(all$loc[all$country != "United States"], ", ", all$country[all$country != "United States"])
+all$location[all$country == "United States"] <- paste0(all$loc[all$country == "United States"], ", ", all$state[all$country == "United States"], ", ", all$country[all$country == "United States"])
+
+locations <- all %>% group_by(location) %>% summarize()
+locations$long_lat <- geocode(locations$location)
+
+starting_point <- "Nashville, TN, United States"
+starting_point_lat_long <- geocode(starting_point)
+
+locations$dist <- distHaversine(locations$long_lat, starting_point_lat_long) / 1000
+locations$dist[locations$location == "Nashville, TN, United States"] <- 1
+locations$lon <- locations$long_lat$lon
+locations$lat <- locations$long_lat$lat
+
+# this is a hacky way to get around that geocode adds a matrix column
+locations <- locations %>% select(location, dist, lat, lon)
+all$quad_days_before_show <- as.numeric(all$days_purchased_before_show) ** 2
+all$quad_days_since_start <- as.numeric(all$days_since_start) ** 2
+
+all <- left_join(all, locations)
+
+all$dist[all$location == "Nashville, TN, United States"] <- 1
+
+sink("distance_gdp.txt")
+print(summary(lm(log_ticket_price ~ show_day_of_week + gdp + dist + days_purchased_before_show + days_since_start + resale, data = all)))
+
+print(summary(lm(log_ticket_price ~ show_day_of_week + log(gdp) + dist + days_purchased_before_show + days_since_start, data = all)))
+
+print(summary(lm(log_ticket_price ~ show_day_of_week + gdp + log(dist) + days_purchased_before_show + days_since_start, data = all)))
+
+print(summary(lm(log_ticket_price ~ show_day_of_week + gdp + dist + quad_days_before_show + days_since_start, data = all)))
+
+print(summary(lm(log_ticket_price ~ show_day_of_week + gdp + dist + days_purchased_before_show + quad_days_since_start, data = all)))
+sink()
+```
+
+``` {r}
+write_csv(all, file = "all_sales_including_van.csv")
+
+minus_van <- all %>% filter(loc != "Vancouver")
+write_csv(minus_van, file = "all_sales_not_including_van.csv")
+```
+
+``` {r}
+summary <- all %>% group_by(loc) %>% summarize(mean_sale = mean(per_ticket), resale = mean(resale)) %>% arrange(desc(mean_sale))
+
+write.csv(summary, file = "eras_summary.csv")
+```
+
+``` {r}
+beyonce_opening <- read_csv("comparison/beyonce_2.csv") %>% filter(Qty > 0)
+beyonce_opening$per_ticket <- beyonce_opening$Price / beyonce_opening$Qty
+beyonce_closing <- read_csv("comparison/data.csv") %>% filter(Qty > 0)
+beyonce_closing$per_ticket <- beyonce_closing$Price / beyonce_closing$Qty
+
+beyonce_toronto_1 <- read_csv("comparison/beyonce_toronto_1.csv")
+beyonce_toronto_2 <- read_csv("comparison/beyonce_toronto_2.csv")
+beyonce_toronto <- rbind(beyonce_toronto_1, beyonce_toronto_2)%>% filter(Qty > 0)
+beyonce_toronto$per_ticket <- beyonce_toronto$Price / beyonce_toronto$Qty
+
+elton_1 <- read_csv("comparison/elton_1.csv")
+elton_2 <- read_csv("comparison/elton_2.csv")
+elton_3 <- read_csv("comparison/elton_3.csv")
+elton <- rbind(elton_1, elton_2, elton_3) %>% filter(Qty > 0)
+
+elton$per_ticket <- elton$Price / elton$Qty
+
+north_america <- all %>% filter(country == "Canada" | country == "United States" | country == "Mexico")
+europe <- all %>% filter(country != "Canada" & country != "United States" & country != "Mexico" & country != "Brazil" & country != "Singapore" & country != "Australia")
+```
+
+``` {r}
+taylor_mean <- mean(all$per_ticket)
+taylor_median <- median(all$per_ticket)
+
+north_america_median <- median(north_america$per_ticket)
+europe_median <- median(europe$per_ticket)
+delta_north_america_europe_median <- north_america_median - europe_median
+
+north_america_mean <- mean(north_america$per_ticket)
+europe_mean <- mean(europe$per_ticket)
+delta_north_america_europe_mean <- north_america_mean - europe_mean
+
+paris_median <- median((all %>% filter(loc == "Paris"))$per_ticket)
+new_york_median <- median((all %>% filter(loc == "East Rutherford"))$per_ticket)
+diff_paris_new_york_median <- new_york_median - paris_median
+
+paris_mean <- mean((all %>% filter(loc == "Paris"))$per_ticket)
+new_york_mean <- mean((all %>% filter(loc == "East Rutherford"))$per_ticket)
+diff_paris_new_york <- new_york_mean - paris_mean
+
+glendale_mean <- mean((all %>% filter(loc == "Glendale"))$per_ticket)
+indianapolis_mean <- mean((all %>% filter(loc == "Indianapolis"))$per_ticket)
+
+indianapolis_median <- median((all %>% filter(loc == "Indianapolis"))$per_ticket)
+glendale_median <- median((all %>% filter(loc == "Glendale"))$per_ticket)
+last_first_diff_mean <- indianapolis_mean - glendale_mean
+last_first_diff_median <- indianapolis_median - glendale_median
+
+toronto_trans <- median(toronto$Price)
+
+beyonce_toronto_median <- median(beyonce_toronto$Price)
+beyonce_toronto_median_per_ticket <- median(beyonce_toronto$per_ticket)
+
+beyonce_ratio <- toronto_trans / beyonce_toronto_median
+```
+
+``` {r}
+beyonce_closing_median <- median(beyonce_closing$per_ticket)
+beyonce_opening_median <- median(beyonce_opening$per_ticket)
+elton_closing <- median(elton$per_ticket)
+elton_closing_mean <- mean(elton$per_ticket)
+```
